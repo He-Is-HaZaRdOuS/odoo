@@ -1,0 +1,27 @@
+/var/log/odoo/*.log {
+    daily
+    missingok
+    rotate 14
+    compress
+    notifempty
+    create 0640 USER_PLACEHOLDER GROUP_PLACEHOLDER
+    sharedscripts
+    lastaction
+        # Attempt to find PID using lsof
+        pid=$(lsof -i :8069 | grep LISTEN | awk '{print $2}')
+
+        # If lsof fails, fall back to netstat
+        if [ -z "$pid" ]; then
+            echo "lsof didn't find the process. Trying netstat..."
+            pid=$(netstat -tulnp | grep ':8069' | awk '{print $7}' | cut -d'/' -f1)
+        fi
+
+        # Send SIGHUP if PID is found
+        if [ -n "$pid" ]; then
+            echo "Sending SIGHUP to PID $pid"
+            kill -SIGHUP "$pid"
+        else
+            echo "No process found for port 8069"
+        fi
+    endscript
+}

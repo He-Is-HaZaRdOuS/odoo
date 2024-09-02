@@ -13,7 +13,6 @@ git clone https://github.com/He-Is-HaZaRdOuS/odoo.git --recurse-submodules
 ```
 2. Run the following commands:
 ```bash
-touch /var/log/odoo/odoo.log
 cd odoo
 ./odoo-bin --addons-path="addons/, tutorials/" -d rd-demo --config=./debian/odoo.conf -s
 ```
@@ -29,7 +28,11 @@ cd odoo
 5. Optionally install Real Estate and Real Estate Account modules
 
 ## Log Files
-The log files are stored in `/var/log/odoo/odoo.log`
+To keep the log files in the default location, create the log file manually:
+```bash
+touch /var/log/odoo/odoo.log
+```
+And update the `logfile` parameter in `/debian/odoo.conf` file to `/var/log/odoo/odoo.log`.
 If you want to change the log file location, edit the `logfile` parameter in `/debian/odoo.conf` and create the log file manually in the new location.
 If you want to set up log rotation using logrotate, create a new configuration file in `/etc/logrotate.d/odoo` with the content from /custom_logrotate/logrotate.template:
 ```bash
